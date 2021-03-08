@@ -1,40 +1,46 @@
-
-var dog,sadDog,happyDog;
-var button1,button2,database;
+var balloon,balloonImg1,balloonImg2,backgroundImg;
+var position,database,balloonref;
 
 
 function preload(){
-  sadDog=loadImage("Images/Dog.png");
-  happyDog=loadImage("Images/happy dog.png");
+balloonImg1 = loadImage("pro-C35 images/Hot Air Ballon-02.png");
+backgroundImg = loadImage("pro-C35 images/Hot Air Ballon-01.png");
+balloonImg2 = loadImage("pro-C35 images/Hot Air Ballon-03.png");
 }
 
+
 function setup() {
-  createCanvas(1000,400);
+  createCanvas(500,500);
+  balloon = createSprite(300, 200, 50, 50);
+  balloon.scale = 0.4;
+  balloon.addImage(balloonImg1);
 database = firebase.database();
-  foodObj = new Food(200,200);
-
-  dog=createSprite(800,200,150,150);
-  dog.addImage(sadDog);
-  dog.scale=0.15;
-
-  button1 = createButton("Add Food");
-  button2 = createButton("Feed the Dog");
-  button1.position(500,100);
-  button2.position(410,100);
-
- 
+balloonref = database.ref('balloon/position');
+balloonref.on("value",readPosition);
 }
 
 function draw() {
-  background(46,139,87);
-foodObj.display();
+  background(backgroundImg);  
+
+  if(keyDown(LEFT_ARROW)){
+    balloon.x = balloon.x-10;
+  }
+  if(keyDown(RIGHT_ARROW)){
+    balloon.x = balloon.x+10;
+  }
+  if(keyDown(UP_ARROW)){
+    balloon.y = balloon.y-10;
+  }
+  if(keyDown(DOWN_ARROW)){
+    balloon.y = balloon.x+10;
+  }
   drawSprites();
 }
-
-//function to read food Stock
-
-
-//function to update food stock and last fed time
-
-
-//function to add food in stock
+function writePosition(){
+  balloonref = databse.ref('balloon.position').set({x:position.x+x,y:position.y+y})
+}
+function readPosition(data){
+  position = data.val();
+  balloon.x = position.x;
+  balloon.y = position.y;
+}
